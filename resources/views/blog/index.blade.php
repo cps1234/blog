@@ -4,27 +4,31 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Laravel Vue JS Item CRUD</h2>
+                <h2>Posts (@{{ pagination.total }})</h2>
             </div>
             <div class="pull-right">
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#create-item">
-                Create Item
+                Add New Post
                 </button>
             </div>
         </div>
     </div>
 
     <div class="blog-list" v-for="item in items">
-        <h3>@{{ item.title }}</h3>
-        <div>@{{ item.created_at }}</div>
+        <div class="row">
+            <div class="col-sm-8">
+                <h3><a href="{{ url('blog/details') }}@{{ '/'+item.id }}">@{{ item.title }}</a></h3>
+            </div>
+            <div class="col-sm-4 text-right">
+                <div>Written by <b>@{{ item.user.name }}</b> on @{{ item.created_at }}</div>
+            </div>
+        </div>
         <div>@{{ item.description }}</div>
-        <div class="action-btn">
-            <button class="btn btn-primary btn-xs" @click.prevent="editItem(item)">Edit</button>
-            <button class="btn btn-danger btn-xs" @click.prevent="deleteItem(item)">Delete</button>
+        <div class="action-btn text-right" v-if="item.user.id == {{ \Auth::id() }}">
+            <button class="btn btn-primary btn-sm" @click.prevent="editItem(item)">Edit</button>
+            <button class="btn btn-danger btn-sm" @click.prevent="deleteItem(item)">Delete</button>
         </div>
-        <div class="comment-list" v-for="comment in item.comments">
-            <div>@{{ comment.text }}</div>
-        </div>
+       
     </div>
     
     
@@ -56,7 +60,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Create Item</h4>
+                    <h4 class="modal-title" id="myModalLabel">Add New Post</h4>
                 </div>
                 <div class="modal-body">
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createItem">
@@ -85,7 +89,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Edit Item</h4>
+                    <h4 class="modal-title" id="myModalLabel">Edit Post</h4>
                 </div>
                 <div class="modal-body">
                     <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateItem(fillItem.id)">
@@ -109,3 +113,7 @@
     </div>
 </div>
 @endsection
+
+@section("javascript")
+ <script type="text/javascript" src="{{ asset('js/blog.js') }}"></script>
+ @endsection

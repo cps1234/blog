@@ -1,6 +1,6 @@
 Vue.http.headers.common['X-CSRF-TOKEN'] = $("#token").attr("value");
 
-new Vue({
+var vm = new Vue({
 
   el: '#manage-vue',
 
@@ -55,22 +55,22 @@ new Vue({
           this.$http.get('/blogs?page='+page).then((response) => {
             response = response.json();
             this.$set('items', response.data.data);
-            this.$set('pagination', response.data.pagination);
+            this.$set('pagination', response.pagination);
           });
         },
 
         createItem: function(){
-		  var input = this.newItem;
-		  this.$http.post('/blogs',input).then((response) => {
+      		  var input = this.newItem;
+      		  this.$http.post('/blogs',input).then((response) => {
 
-		      this.changePage(this.pagination.current_page);
-			    this.newItem = {'title':'','description':''};
-			     $("#create-item").modal('hide');
-			     toastr.success('Item Created Successfully.', 'Success Alert', {timeOut: 5000});
-		  }, (response) => {
-			   this.formErrors = response.json().data;
-	    });
-	},
+      		      this.changePage(this.pagination.current_page);
+      			    this.newItem = {'title':'','description':''};
+      			     $("#create-item").modal('hide');
+      			     toastr.success('Item Created Successfully.', 'Success Alert', {timeOut: 5000});
+      		  }, (response) => {
+      			   this.formErrors = response.json().data;
+      	    });
+      	},
 
       deleteItem: function(item){
         this.$http.delete('/blogs/'+item.id).then((response) => {

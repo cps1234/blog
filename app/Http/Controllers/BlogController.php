@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Post;
+use App\PostComment;
+use Auth;
 
 class BlogController extends Controller
 {
 
     public function manageBlog()
     {
-        return view('manage-blog');
+        return view('blog.index');
     }
 
     /**
@@ -20,7 +22,7 @@ class BlogController extends Controller
      */
     public function index(Request $request)
     {
-        $posts = Post::latest()->paginate(5);
+        $posts = Post::with("user")->latest()->paginate(5);
 
         $response = [
             'pagination' => [
@@ -38,6 +40,16 @@ class BlogController extends Controller
     }
 
     /**
+     * undocumented function
+     *
+     * @return void
+     * @author 
+     **/
+    public function details($id)
+    {
+        return view('blog.details', compact("id"));
+    }
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -50,6 +62,7 @@ class BlogController extends Controller
             'description' => 'required',
         ]);
 
+        $request['user_id'] = Auth::id();
         $create = Post::create($request->all());
 
         return response()->json($create);
@@ -84,5 +97,38 @@ class BlogController extends Controller
     {
         Post::find($id)->delete();
         return response()->json(['done']);
+    }
+
+    /**
+     * Show Post function
+     *
+     * @return void
+     * @author 
+     **/
+    public function show($id)
+    {
+        $post = Post::with("user","comments.user")->withCount("comments")->find($id);
+
+        return response()->json(["success" => true, "data" => $post]);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addComment(Request $request, $postId)
+    {
+        $this->validate($request, [
+            'text' => 'required',
+        ]);
+
+        $request['user_id'] = Auth::id();
+        $request['post_id'] = $postId;
+        $create = PostComment::create($request->all());
+
+        return response()->json($create);
     }
 }

@@ -15,5 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('manage-blog', 'BlogController@manageBlog');
+Route::get('manage-blog', 'BlogController@manageBlog')->name("manage_blog");
+Route::post('blog/addcomment/{postId}', 'BlogController@addComment')->name("add_comment");
+
+Route::get('blog/details/{id}', 'BlogController@details')->name("blog_details");
 Route::resource('blogs','BlogController');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
