@@ -10,6 +10,21 @@ use Auth;
 class BlogController extends Controller
 {
 
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Manage Blog function
+     *
+     * @return void
+     **/
     public function manageBlog()
     {
         return view('blog.index');
@@ -49,6 +64,7 @@ class BlogController extends Controller
     {
         return view('blog.details', compact("id"));
     }
+    
     /**
      * Store a newly created resource in storage.
      *

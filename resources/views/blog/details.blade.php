@@ -70,7 +70,7 @@
           methods : {
 
                 getDetails: function(){
-                  this.$http.get('/blogs/{{ $id }}').then((response) => {
+                  this.$http.get(APP_URL+'/blogs/{{ $id }}').then((response) => {
                     response = response.json();
                     this.$set('item', response.data);
                   });
@@ -79,7 +79,7 @@
 
                 createComment: function(){
                       var input = this.newComment;
-                      this.$http.post('/blog/addcomment/{{ $id }}',input).then((response) => {
+                      this.$http.post(APP_URL+'/blog/addcomment/{{ $id }}',input).then((response) => {
                             this.getDetails();
                             this.newComment = {'text':''};
                             toastr.success('Comment added Successfully.', 'Success Alert', {timeOut: 5000});

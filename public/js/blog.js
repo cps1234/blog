@@ -52,7 +52,7 @@ var vm = new Vue({
   methods : {
 
         getVueItems: function(page){
-          this.$http.get('/blogs?page='+page).then((response) => {
+          this.$http.get(APP_URL+'/blogs?page='+page).then((response) => {
             response = response.json();
             this.$set('items', response.data.data);
             this.$set('pagination', response.pagination);
@@ -61,7 +61,7 @@ var vm = new Vue({
 
         createItem: function(){
       		  var input = this.newItem;
-      		  this.$http.post('/blogs',input).then((response) => {
+      		  this.$http.post(APP_URL+'/blogs',input).then((response) => {
 
       		      this.changePage(this.pagination.current_page);
       			    this.newItem = {'title':'','description':''};
@@ -73,7 +73,7 @@ var vm = new Vue({
       	},
 
       deleteItem: function(item){
-        this.$http.delete('/blogs/'+item.id).then((response) => {
+        this.$http.delete(APP_URL+'/blogs/'+item.id).then((response) => {
             this.changePage(this.pagination.current_page);
             toastr.success('Item Deleted Successfully.', 'Success Alert', {timeOut: 5000});
         });
@@ -87,8 +87,8 @@ var vm = new Vue({
       },
 
       updateItem: function(id){
-        var input = this.fillItem;
-        this.$http.put('/blogs/'+id,input).then((response) => {
+        var input = this.fillItem; 
+        this.$http.put(APP_URL+'/blogs/'+id,input).then((response) => {
             this.changePage(this.pagination.current_page);
             this.fillItem = {'title':'','description':'','id':''};
             $("#edit-item").modal('hide');
